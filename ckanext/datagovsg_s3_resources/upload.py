@@ -166,7 +166,7 @@ def upload_resource_zipfile_to_s3(context, resource):
 
     # Initialize metadata
     metadata = toolkit.get_action(
-        'package_metadata_show')(data_dict={'id': pkg['id']})
+        'package_show')(data_dict={'id': pkg['id']})
     metadata_yaml_buff = StringIO.StringIO()
     metadata_yaml_buff.write(unicode("# Metadata for %s\r\n" % pkg[
                              "title"]).encode('ascii', 'ignore'))
@@ -255,7 +255,7 @@ def upload_package_zipfile_to_s3(context, pkg_dict):
 
     # Obtain package and package metadata
     metadata = toolkit.get_action(
-        'package_metadata_show')(data_dict={'id': pkg['id']})
+        'package_show')(data_dict={'id': pkg['id']})
 
     # Initialize package zip file
     package_buff = StringIO.StringIO()
