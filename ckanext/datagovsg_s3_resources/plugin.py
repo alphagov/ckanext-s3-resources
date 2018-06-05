@@ -53,14 +53,16 @@ class DatagovsgS3ResourcesPlugin(plugins.SingletonPlugin):
         '''
 
         # Check if required config options exist
+        logger = logging.getLogger(__name__)
         if not upload.config_exists():
             # Log an error
-            logger = logging.getLogger(__name__)
             logger.error("Required S3 config options missing. Please check if required config options exist.")
             raise Exception('Required S3 config options missing')
         else:
             # If resource is an API, don't do anything special
             if resource.get('format') == 'API':
+                return
+            elif resource['upload'] == '':
                 return
             # Only upload to S3 if not blacklisted
             elif not upload.is_blacklisted(resource):
@@ -93,7 +95,7 @@ class DatagovsgS3ResourcesPlugin(plugins.SingletonPlugin):
 
         # Remove 'resource_create_or_update' in context. See documentation in 'before_create_or_update'
         # for more details
-        if 'resource_create_or_update' in context and upload.config_exists():
+        if 'resource_create_or_update' in context and upload.config_exists() and resource['upload'] != '':
             context.pop('resource_create_or_update')
             pkg = plugins.toolkit.get_action('package_show')(data_dict={'id': resource['package_id']})
             upload.upload_package_zipfile_to_s3(context, pkg)
