@@ -62,7 +62,7 @@ class DatagovsgS3ResourcesPlugin(plugins.SingletonPlugin):
             # If resource is an API, don't do anything special
             if resource.get('format') == 'API':
                 return
-            elif resource['upload'] == '':
+            elif 'upload' in resource and resource['upload'] == '':
                 return
             # Only upload to S3 if not blacklisted
             elif not upload.is_blacklisted(resource):
