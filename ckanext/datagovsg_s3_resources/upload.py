@@ -99,6 +99,7 @@ def upload_resource_to_s3(context, resource):
         except OSError:
             abort(404, _('Resource data not found'))
     else:
+        return ## in datagovuk, we don't want to upload from URL
         logger.info("File is downloadable from URL")
         try:
             # Start session to download files
@@ -152,7 +153,7 @@ def upload_resource_zipfile_to_s3(context, resource):
     # Init logger
     logger = logging.getLogger(__name__)
     logger.info("Starting upload_resource_zipfile_to_s3 for resource %s" % resource.get('name', ''))
-    
+   
     # If resource is an API, skip upload
     if resource.get('format', '') == 'API':
         return
@@ -192,6 +193,7 @@ def upload_resource_zipfile_to_s3(context, resource):
 
     # Case 2: Resource exists outside of CKAN, we should have a URL to download it
     else:
+        return ## we do not upload from url in datagovuk
         # Try to download the resource from the provided URL
         try:
             logger.info("Obtaining file from URL %s" % resource.get('url', ''))
