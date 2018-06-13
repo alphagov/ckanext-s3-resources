@@ -62,6 +62,8 @@ class DatagovsgS3ResourcesPlugin(plugins.SingletonPlugin):
             # If resource is an API, don't do anything special
             if resource.get('format') == 'API':
                 return
+            elif 'upload' not in resource:
+                return
             elif 'upload' in resource and resource['upload'] == '':
                 return
             # Only upload to S3 if not blacklisted
@@ -91,6 +93,8 @@ class DatagovsgS3ResourcesPlugin(plugins.SingletonPlugin):
     def after_create_or_update(self, context, resource):
         '''Uploads resource zip file to S3
         Done after create/update instead of before to ensure metadata is generated correctly'''
+        if 'upload' not in resource: return
+
         upload.upload_resource_zipfile_to_s3(context, resource)
 
         # Remove 'resource_create_or_update' in context. See documentation in 'before_create_or_update'
