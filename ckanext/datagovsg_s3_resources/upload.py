@@ -73,15 +73,15 @@ def upload_resource_to_s3(context, resource):
     extension = mimetypes.guess_extension(content_type)
 
     # Upload to S3
+    timestamp = datetime.datetime.utcnow()
     pkg = toolkit.get_action('package_show')(context, {'id': resource['package_id']})
-    timestamp = datetime.datetime.utcnow() # should match the assignment in the ResourceUpload class
     s3_filepath = (pkg.get('name')
                    + '/'
                    + 'resources'
                    + '/'
-                   + slugify(resource.get('name'), to_lower=True)
+                   + resource.get('timestamp', timestamp.strftime("%Y-%m-%dT%H-%M-%SZ"))
                    + '-'
-                   + timestamp.strftime("%Y-%m-%dT%H-%M-%SZ")
+                   + slugify(resource.get('name'))
                    + extension)
 
     # If file is currently being uploaded, the file is in resource['upload']
@@ -153,7 +153,7 @@ def upload_resource_zipfile_to_s3(context, resource):
     # Init logger
     logger = logging.getLogger(__name__)
     logger.info("Starting upload_resource_zipfile_to_s3 for resource %s" % resource.get('name', ''))
-   
+
     # If resource is an API, skip upload
     if resource.get('format', '') == 'API':
         return
