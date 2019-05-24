@@ -81,7 +81,7 @@ def upload_resource_to_s3(context, resource):
                    + '/'
                    + resource.get('timestamp', timestamp.strftime("%Y-%m-%dT%H-%M-%SZ"))
                    + '-'
-                   + slugify(resource.get('name'))
+                   + slugify(resource.get('name'), to_lower=True)
                    + extension)
 
     # If file is currently being uploaded, the file is in resource['upload']
